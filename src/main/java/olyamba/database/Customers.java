@@ -35,4 +35,16 @@ public class Customers {
                 return true;
         return false;
     }
+
+    public void deleteCustomer(String name) throws SQLException {
+        String sql = "DELETE FROM customers WHERE name = '" + name + "'";
+        statement.execute(sql);
+    }
+
+    public String getCustomerInfo(String name) throws SQLException {
+        ResultSet rs = statement.executeQuery("SELECT * FROM customers WHERE name = '" + name + "'");
+        while (rs.next())
+            return "Ваше имя: " + rs.getString(1) + "\n" + "Ваша почта: " + rs.getString(2) + "\n" + "Ваш город: " + rs.getString(3) + "";
+        return "";
+    }
 }

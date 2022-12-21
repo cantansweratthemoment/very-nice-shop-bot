@@ -17,7 +17,6 @@ import java.util.Map;
 public class Bot {
     private final TelegramBot bot = new TelegramBot(System.getenv("BOT_TOKEN"));
     private static boolean waitingForMail = false;
-    private static boolean ordering = false;
 
     public void serve() {
         bot.setUpdatesListener(updates -> {
@@ -45,12 +44,34 @@ public class Bot {
     private void answerForCallback(CallbackQuery callbackQuery) {
         switch (callbackQuery.data()) {
             case "register" -> {
+                if (CustomerService.checkCustomer(callbackQuery.from().username())) {
+                    SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Вы уже зарегистрированны в системе(→_→)").replyMarkup(getStartKeyboard()));
+                    return;
+                }
                 waitingForMail = true;
                 SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Введите вашу почту и город через пробел(´• ω •`) ♡"));
             }
+            case "about-me" -> {
+                if (!CustomerService.checkCustomer(callbackQuery.from().username())) {
+                    SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Вы еще не регистрировалисьᕕ( ᐛ )ᕗ").replyMarkup(getStartKeyboard()));
+                    return;
+                }
+                SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), CustomerService.getCustomerInfo(callbackQuery.from().username())).replyMarkup(getStartKeyboard()));
+            }
             case "order" -> {
-                ordering = true;
+                if (!CustomerService.checkCustomer(callbackQuery.from().username())) {
+                    SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Вы еще не регистрировалисьᕕ( ᐛ )ᕗ").replyMarkup(getStartKeyboard()));
+                    return;
+                }
                 SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Что вы хотите купить?╰(▔∀▔)╯").replyMarkup(getOrderKeyboard()));
+            }
+            case "delete" -> {
+                if (!CustomerService.checkCustomer(callbackQuery.from().username())) {
+                    SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Вы еще не регистрировались, мне нечего удалятьヽ(°〇°)ﾉ").replyMarkup(getStartKeyboard()));
+                } else {
+                    CustomerService.deleteCustomer(callbackQuery.from().username());
+                    SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Удаляю┐('～`;)┌").replyMarkup(getStartKeyboard()));
+                }
             }
             default -> {
                 if (callbackQuery.data().split(" ")[0].equals("product")) {
@@ -79,8 +100,11 @@ public class Bot {
     }
 
     private InlineKeyboardMarkup getStartKeyboard() {
-        return new InlineKeyboardMarkup(
-                new InlineKeyboardButton("Зарегистрироваться😍").callbackData("register"),
-                new InlineKeyboardButton("Сделать заказ🐈").callbackData("order"));
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.addRow(new InlineKeyboardButton("Зарегистрироваться😍").callbackData("register"));
+        inlineKeyboardMarkup.addRow(new InlineKeyboardButton("Сделать заказ🐈").callbackData("order"));
+        inlineKeyboardMarkup.addRow(new InlineKeyboardButton("Удалить информацию обо мне💀").callbackData("delete"));
+        inlineKeyboardMarkup.addRow(new InlineKeyboardButton("Посмотреть информацию обо мне🙂").callbackData("about-me"));
+        return inlineKeyboardMarkup;
     }
 }

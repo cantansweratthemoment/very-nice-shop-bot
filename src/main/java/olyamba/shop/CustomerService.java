@@ -14,4 +14,30 @@ public class CustomerService {
             e.printStackTrace();
         }
     }
+
+    public static boolean checkCustomer(String name) {
+        try {
+            return Communicator.getCustomers().checkCustomer(name);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void deleteCustomer(String name) {
+        try {
+            Communicator.getCustomers().deleteCustomer(name);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getCustomerInfo(String name) {
+        try {
+            return Communicator.getCustomers().getCustomerInfo(name);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }
