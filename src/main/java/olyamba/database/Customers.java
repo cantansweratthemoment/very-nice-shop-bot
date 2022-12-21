@@ -47,4 +47,18 @@ public class Customers {
             return "Ваше имя: " + rs.getString(1) + "\n" + "Ваша почта: " + rs.getString(2) + "\n" + "Ваш город: " + rs.getString(3) + "";
         return "";
     }
+
+    public String getCustomerEmail(String name) throws SQLException {
+        ResultSet rs = statement.executeQuery("SELECT mail FROM customers WHERE name = '" + name + "'");
+        while (rs.next())
+            return rs.getString(1);
+        return "";
+    }
+
+    public String getCustomerCity(String name) throws SQLException {
+        ResultSet rs = statement.executeQuery("SELECT city FROM customers WHERE name = '" + name + "'");
+        while (rs.next())
+            return rs.getString(1);
+        return "";
+    }
 }

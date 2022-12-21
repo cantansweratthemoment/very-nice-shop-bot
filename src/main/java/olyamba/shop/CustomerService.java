@@ -40,4 +40,22 @@ public class CustomerService {
             return "";
         }
     }
+
+    public static String getCustomerMail(String name) {
+        try {
+            return Communicator.getCustomers().getCustomerEmail(name);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String getCustomerCity(String name) {
+        try {
+            return Communicator.getCustomers().getCustomerCity(name);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }

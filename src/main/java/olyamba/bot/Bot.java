@@ -11,7 +11,10 @@ import com.pengrad.telegrambot.request.*;
 import com.pengrad.telegrambot.response.SendResponse;
 import olyamba.shop.CustomerService;
 import olyamba.shop.ProductsService;
+import olyamba.utills.Producer;
 
+import javax.jms.JMSException;
+import java.sql.SQLException;
 import java.util.Map;
 
 public class Bot {
@@ -77,6 +80,11 @@ public class Bot {
                 if (callbackQuery.data().split(" ")[0].equals("product")) {
                     String productType = callbackQuery.data().split(" ")[1];
                     if (ProductsService.order(productType)) {
+                        try {
+                            Producer.sendMessage(productType + " " + callbackQuery.from().username() + " " + CustomerService.getCustomerMail(callbackQuery.from().username()) + " " + CustomerService.getCustomerCity(callbackQuery.from().username()));
+                        } catch (JMSException e) {
+                            e.printStackTrace();
+                        }
                         SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Поздравляю с покупкой!ヽ(*・ω・)ﾉ Проверьте ваш почтовый ящик(=`ω´=)"));
                     } else {
                         SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "К сожалению, товар закончился(μ_μ)"));

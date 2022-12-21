@@ -2,6 +2,7 @@ package olyamba.shop;
 
 import olyamba.database.Communicator;
 import olyamba.database.Products;
+import olyamba.utills.Producer;
 
 import java.sql.SQLException;
 import java.util.Map;
