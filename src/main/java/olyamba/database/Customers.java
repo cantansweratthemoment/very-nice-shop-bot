@@ -14,15 +14,17 @@ public class Customers {
     protected void createCustomers() throws SQLException {
         String createTableSQL = "CREATE TABLE IF NOT EXISTS  customers " +
                 "(name TEXT, " +
-                " mail TEXT)";
+                " mail TEXT, " +
+                "city TEXT)";
         statement.execute(createTableSQL);
     }
 
-    public void addCustomer(String name, String mail) throws SQLException {
-        String sql = "INSERT INTO customers (name, mail) VALUES (?, ?)";
+    public void addCustomer(String name, String mail, String city) throws SQLException {
+        String sql = "INSERT INTO customers (name, mail, city) VALUES (?, ?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, name);
         preparedStatement.setString(2, mail);
+        preparedStatement.setString(3, city);
         preparedStatement.execute();
     }
 

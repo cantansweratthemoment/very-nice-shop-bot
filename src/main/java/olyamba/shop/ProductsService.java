@@ -19,8 +19,9 @@ public class ProductsService {
     public static boolean order(String product) {
         try {
             boolean success = Communicator.getProducts().isAvailable(product);
-            //if (!success) return false;
-            return success;
+            if (!success) return false;
+            Communicator.getProducts().removeProduct(product);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

@@ -32,7 +32,7 @@ public class Bot {
         if (message != null) {
             long chatId = update.message().chat().id();
             if (waitingForMail) {
-                CustomerService.addCustomer(message.from().username(), message.text());
+                CustomerService.addCustomer(message.from().username(), message.text().split(" ")[0], message.text().split(" ")[1]);
                 waitingForMail = false;
                 SendResponse response = bot.execute(new SendMessage(chatId, "Регистрирую (ﾉ´ з `)ノ"));
             }
@@ -46,7 +46,7 @@ public class Bot {
         switch (callbackQuery.data()) {
             case "register" -> {
                 waitingForMail = true;
-                SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Введите вашу почту(´• ω •`) ♡"));
+                SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Введите вашу почту и город через пробел(´• ω •`) ♡"));
             }
             case "order" -> {
                 ordering = true;
@@ -56,7 +56,7 @@ public class Bot {
                 if (callbackQuery.data().split(" ")[0].equals("product")) {
                     String productType = callbackQuery.data().split(" ")[1];
                     if (ProductsService.order(productType)) {
-                        SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Поздравляю с покупкой!ヽ(*・ω・)ﾉ"));
+                        SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "Поздравляю с покупкой!ヽ(*・ω・)ﾉ Проверьте ваш почтовый ящик(=`ω´=)"));
                     } else {
                         SendResponse response = bot.execute(new SendMessage(callbackQuery.message().chat().id(), "К сожалению, товар закончился(μ_μ)"));
                     }
