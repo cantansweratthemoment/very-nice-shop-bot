@@ -1,2 +1,5 @@
 # very-nice-shop-bot
-cloud computing lab🎠
+
+Бот для Telegram с использованием VK Cloud.
+
+![картинка](aaa.png)
